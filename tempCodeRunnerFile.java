@@ -1,2 +1,0 @@
-
-            daftarAkun.add(akunGiroBaru);
