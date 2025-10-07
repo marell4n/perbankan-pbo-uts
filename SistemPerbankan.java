@@ -11,10 +11,10 @@ public class SistemPerbankan {
         int pilihan = 0;
 
         while (pilihan != 5) {
-            System.out.println("\n===== MENU PERBANKAN SEDERHANA =====");
+            System.out.println("\n===== MENU PERBANKAN =====");
             System.out.println("1. Buat Akun Baru");
-            System.out.println("2. Setor Tunai");
-            System.out.println("3. Tarik Tunai");
+            System.out.println("2. Lakukan Transaksi"); // Diubah dari Setor/Tarik
+            System.out.println("3. Lihat Informasi Akun Tunggal");
             System.out.println("4. Lihat Informasi Semua Akun");
             System.out.println("5. Keluar");
             System.out.println("======================================");
@@ -28,10 +28,10 @@ public class SistemPerbankan {
                     buatAkunBaru();
                     break;
                 case 2:
-                    lakukanSetoran();
+                    lakukanTransaksi(); // Memanggil metode transaksi yang baru
                     break;
                 case 3:
-                    lakukanPenarikan();
+                    lihatInfoAkunTunggal(); // Metode baru untuk melihat 1 akun
                     break;
                 case 4:
                     lihatSemuaAkun();
@@ -84,48 +84,87 @@ public class SistemPerbankan {
             akunTabunganBaru.getInfo();
         } else {
             System.out.println("Jenis akun tidak valid.");
+        }
+    }
+
+    // ====================================================================
+    // FUNGSI BARU UNTUK SEMUA TRANSAKSI
+    // ====================================================================
+    public static void lakukanTransaksi() {
+        System.out.print("Masukkan Nomor Akun: ");
+        String nomor = scanner.nextLine();
+        Akun akun = cariAkun(nomor);
+
+        if (akun == null) {
+            System.out.println("Akun tidak ditemukan.");
             return;
         }
-        System.out.println("Akun berhasil dibuat!");
+
+        // Tampilkan menu transaksi
+        System.out.println("\nPilih Transaksi untuk Akun: " + akun.getNomorAkun());
+        System.out.println("1. Setor Tunai");
+        System.out.println("2. Tarik Tunai");
+
+        // Jika akunnya adalah Tabungan, tampilkan menu tambahan
+        if (akun instanceof Tabungan) {
+            System.out.println("3. Pindahkan Dana ke Kantong Saving");
+            System.out.println("4. Kembalikan Dana dari Kantong Saving");
+        }
+        System.out.print("Pilihan: ");
+        int pilihanTransaksi = scanner.nextInt();
+        scanner.nextLine();
+        
+        // Meminta jumlah hanya jika pilihan valid dan bukan menu saving yang tidak butuh jumlah
+        double jumlah = 0;
+        if (pilihanTransaksi > 0) {
+            System.out.print("Masukkan Jumlah: ");
+            jumlah = scanner.nextDouble();
+            scanner.nextLine();
+        }
+
+        switch (pilihanTransaksi) {
+            case 1:
+                akun.setor(jumlah);
+                break;
+            case 2:
+                akun.tarik(jumlah);
+                break;
+            case 3:
+                if (akun instanceof Tabungan) {
+                    ((Tabungan) akun).pindahkanKeSaving(jumlah);
+                } else {
+                    System.out.println("Pilihan tidak valid untuk jenis akun ini.");
+                }
+                break;
+            case 4:
+                if (akun instanceof Tabungan) {
+                    ((Tabungan) akun).kembalikanDariSaving(jumlah);
+                } else {
+                    System.out.println("Pilihan tidak valid untuk jenis akun ini.");
+                }
+                break;
+            default:
+                System.out.println("Pilihan transaksi tidak valid.");
+        }
     }
 
     // Fungsi untuk mencari akun berdasarkan nomor
     public static Akun cariAkun(String nomor) {
         for (Akun akun : daftarAkun) {
-            if (akun.getNomorAkun().equals(nomor)) {
+            if (akun.getNomorAkun().equalsIgnoreCase(nomor)) { // Dibuat case-insensitive
                 return akun;
             }
         }
         return null; // Akun tidak ditemukan
     }
-
-    // Fungsi untuk melakukan setoran
-    public static void lakukanSetoran() {
-        System.out.print("Masukkan Nomor Akun Tujuan: ");
+    
+    // Fungsi baru untuk melihat info satu akun
+    public static void lihatInfoAkunTunggal() {
+        System.out.print("Masukkan Nomor Akun yang ingin dilihat: ");
         String nomor = scanner.nextLine();
         Akun akun = cariAkun(nomor);
-
         if (akun != null) {
-            System.out.print("Masukkan Jumlah Setoran: ");
-            double jumlah = scanner.nextDouble();
-            scanner.nextLine();
-            akun.setor(jumlah);
-        } else {
-            System.out.println("Akun tidak ditemukan.");
-        }
-    }
-
-    // Fungsi untuk melakukan penarikan
-    public static void lakukanPenarikan() {
-        System.out.print("Masukkan Nomor Akun: ");
-        String nomor = scanner.nextLine();
-        Akun akun = cariAkun(nomor);
-
-        if (akun != null) {
-            System.out.print("Masukkan Jumlah Penarikan: ");
-            double jumlah = scanner.nextDouble();
-            scanner.nextLine();
-            akun.tarik(jumlah);
+            akun.getInfo();
         } else {
             System.out.println("Akun tidak ditemukan.");
         }
