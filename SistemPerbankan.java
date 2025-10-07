@@ -65,17 +65,23 @@ public class SistemPerbankan {
             System.out.print("Masukkan Batas Overdraft: ");
             double limit = scanner.nextDouble();
             scanner.nextLine();
-            daftarAkun.add(new Giro(nomorAkun, nama, saldo, limit));
+            Giro akunGiroBaru = new Giro(nomorAkun, nama, saldo, limit);
+            daftarAkun.add(akunGiroBaru);
+            System.out.println("\n>> Akun Giro Berhasil Dibuat! <<");
+            akunGiroBaru.getInfo();
         } else if (jenis == 2) {
             System.out.print("Masukkan Jangka Waktu (bulan): ");
             int bulan = scanner.nextInt();
             scanner.nextLine();
-            daftarAkun.add(new Deposito(nomorAkun, nama, saldo, bulan));
+            Deposito akunDepositoBaru = new Deposito(nomorAkun, nama, saldo, bulan);
+            daftarAkun.add(akunDepositoBaru);
+            System.out.println("\n>> Akun Deposito Berhasil Dibuat! <<");
+            akunDepositoBaru.getInfo();
         } else if (jenis == 3) {
-            System.out.print("Masukkan Suku Bunga (%): ");
-            double bunga = scanner.nextDouble();
-            scanner.nextLine();
-            daftarAkun.add(new Tabungan(nomorAkun, nama, saldo, bunga));
+            Tabungan akunTabunganBaru = new Tabungan(nomorAkun, nama, saldo);
+            daftarAkun.add(akunTabunganBaru);
+            System.out.println("\n>> Akun Tabungan Berhasil Dibuat! <<");
+            akunTabunganBaru.getInfo();
         } else {
             System.out.println("Jenis akun tidak valid.");
             return;
