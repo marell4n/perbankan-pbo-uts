@@ -65,7 +65,7 @@ public class SistemPerbankan {
             System.out.print("Masukkan Batas Penarikan: ");
             double limit = scanner.nextDouble();
             scanner.nextLine();
-            Akun akun = new Giro(nomorAkun, nama, saldo, limit);
+            Giro akun = new Giro(nomorAkun, nama, saldo, limit);
             daftarAkun.add(akun);
             System.out.println("\n>> Akun Giro Berhasil Dibuat! <<");
             akun.getInfo();
@@ -73,12 +73,12 @@ public class SistemPerbankan {
             System.out.print("Masukkan Jangka Waktu (bulan): ");
             int bulan = scanner.nextInt();
             scanner.nextLine();
-            Akun akun = new Deposito(nomorAkun, nama, saldo, bulan);
+            Deposito akun = new Deposito(nomorAkun, nama, saldo, bulan);
             daftarAkun.add(akun);
             System.out.println("\n>> Akun Deposito Berhasil Dibuat! <<");
             akun.getInfo();
         } else if (jenis == 3) {
-            Akun akun = new Tabungan(nomorAkun, nama, saldo);
+            Tabungan akun = new Tabungan(nomorAkun, nama, saldo);
             daftarAkun.add(akun);
             System.out.println("\n>> Akun Tabungan Berhasil Dibuat! <<");
             akun.getInfo();
@@ -108,17 +108,21 @@ public class SistemPerbankan {
             System.out.println("3. Pindahkan Dana ke Kantong Saving");
             System.out.println("4. Kembalikan Dana dari Kantong Saving");
         }
+        
         System.out.print("Pilihan: ");
         int pilihanTransaksi = scanner.nextInt();
         scanner.nextLine();
         
-        //meminta jumlah hanya jika pilihan valid
+        //hanya minta jumlah jika pilihan valid
         double jumlah = 0;
-        if (pilihanTransaksi > 0) {
-            System.out.print("Masukkan Jumlah: ");
-            jumlah = scanner.nextDouble();
-            scanner.nextLine();
-        } else 
+        if (pilihanTransaksi < 1 || (pilihanTransaksi > 2 && !(akun instanceof Tabungan)) || pilihanTransaksi > 4) {
+            System.out.println("Gagal! Pilihan transaksi tidak valid.");
+            return; //keluar jika pilihan tidak valid
+        }
+
+        System.out.print("Masukkan Jumlah: ");
+        jumlah = scanner.nextDouble();
+        scanner.nextLine();
 
         switch (pilihanTransaksi) {
             case 1:
@@ -128,15 +132,15 @@ public class SistemPerbankan {
                 akun.tarik(jumlah);
                 break;
             case 3:
-                if (akun instanceof Tabungan tabungan) {
-                    tabungan.pindahkanKeSaving(jumlah);
+                if (akun instanceof Tabungan) {
+                    ((Tabungan) akun).pindahkanKeSaving(jumlah);
                 } else {
                     System.out.println("Pilihan tidak valid untuk jenis akun ini.");
                 }
                 break;
             case 4:
-                if (akun instanceof Tabungan tabungan) {
-                    tabungan.kembalikanDariSaving(jumlah);
+                if (akun instanceof Tabungan) {
+                    ((Tabungan) akun).kembalikanDariSaving(jumlah);
                 } else {
                     System.out.println("Pilihan tidak valid untuk jenis akun ini.");
                 }
