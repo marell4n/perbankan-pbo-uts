@@ -31,7 +31,7 @@ public class SistemPerbankan {
                     transaksi();
                     break;
                 case 3:
-                    lihatInfoAkun(); //metode baru untuk melihat 1 akun
+                    lihatInfoAkun();
                     break;
                 case 4:
                     lihatSemuaAkun();
